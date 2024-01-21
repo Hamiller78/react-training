@@ -77,6 +77,11 @@ function SingleListTable({
             draggable
           />
         ))}
+        {new Array(10 - listedEntities.length).fill(null).map((_, index) => (
+          <tr key={`empty-${index}`}>
+            <td>&nbsp;</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
