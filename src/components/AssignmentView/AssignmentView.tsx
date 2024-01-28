@@ -7,6 +7,9 @@ interface TableEntity {
 
 interface AssignmentViewProps<T> {
   allEntities: T[];
+  selectedEntities: T[];
+  onSelectEntity: (entity: T) => void;
+  onUnselectEntity: (entity: T) => void;
 }
 
 interface TableRowProps {
@@ -30,14 +33,14 @@ const TableRow: React.FC<TableRowProps> = ({
   );
 };
 
-function SingleListTable({
+function SingleListTable<T extends TableEntity>({
   allEntities,
   listedEntities,
   onDropEntity,
 }: {
-  allEntities: TableEntity[];
-  listedEntities: TableEntity[];
-  onDropEntity: (entities: TableEntity) => void;
+  allEntities: T[];
+  listedEntities: T[];
+  onDropEntity: (entities: T) => void;
 }) {
   const handleDragStart = (
     event: React.DragEvent<HTMLTableRowElement>,
@@ -52,7 +55,7 @@ function SingleListTable({
 
   const handleDrop = (event: React.DragEvent<HTMLTableElement>) => {
     const sourceId = parseInt(event.dataTransfer.getData("text/plain"));
-    const sourceEntity: TableEntity | undefined = allEntities.find(
+    const sourceEntity: T | undefined = allEntities.find(
       (x) => x.id === sourceId
     );
     if (!sourceEntity) {
@@ -89,33 +92,33 @@ function SingleListTable({
 
 const AssignmentView = <T extends TableEntity>({
   allEntities,
+  selectedEntities,
+  onSelectEntity,
+  onUnselectEntity,
 }: AssignmentViewProps<T>) => {
-  const [selectedEntities, setSelectedEntities] = React.useState<TableEntity[]>(
-    []
-  );
-
   let unselectedEntities = allEntities.filter(
-    (entry: any) => !selectedEntities.includes(entry)
+    (entry: T) =>
+      !selectedEntities.some((selectedEntity) => selectedEntity.id === entry.id)
   );
 
-  const handleUnselectEntity = (entity: TableEntity) => {
-    if (!selectedEntities.includes(entity)) {
-      return; // already revoked
-    }
-    setSelectedEntities(selectedEntities.filter((item) => item !== entity));
-    unselectedEntities = allEntities.filter(
-      (entry: any) => !selectedEntities.includes(entry)
-    );
-  };
-
-  const handleSelectEntity = (entity: TableEntity) => {
-    if (selectedEntities.includes(entity)) {
+  const handleSelectEntity = (entity: T) => {
+    if (
+      selectedEntities.some((selectedEntity) => selectedEntity.id === entity.id)
+    ) {
       return; // already assigned
     }
-    setSelectedEntities([...selectedEntities, entity]);
-    unselectedEntities = allEntities.filter(
-      (entry: any) => !selectedEntities.includes(entity)
-    );
+    onSelectEntity(entity);
+  };
+
+  const handleUnselectEntity = (entity: T) => {
+    if (
+      !selectedEntities.some(
+        (selectedEntity) => selectedEntity.id === entity.id
+      )
+    ) {
+      return; // already revoked
+    }
+    onUnselectEntity(entity);
   };
 
   return (
