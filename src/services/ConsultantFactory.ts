@@ -12,10 +12,13 @@ export class ConsultantFactory {
     const randomFirstName = this.firstNames[Math.floor(Math.random() * this.firstNames.length)];
     const randomLastName = this.lastNames[Math.floor(Math.random() * this.lastNames.length)];
     const randomRole = this.createRandomRole();
+    const peopleSkill = Math.floor(Math.random() * 5) + 1;
+    const technicalSkill = Math.floor(Math.random() * 5) + 1;
+    const organisationSkill = Math.floor(Math.random() * 5) + 1;
     const randomSkills = this.createRandomSkills(randomRole);
     const fullName = `${randomFirstName} ${randomLastName}`;
 
-    return new Consultant(this.idCounter, fullName, randomRole, randomSkills);
+    return new Consultant(this.idCounter, fullName, randomRole, peopleSkill, technicalSkill, organisationSkill, randomSkills);
   }
 
   static createRandomRole(): Role {
