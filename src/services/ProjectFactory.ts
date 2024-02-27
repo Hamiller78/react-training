@@ -71,3 +71,5 @@ export class ProjectFactory {
         'Documentation of ${skill1} and ${skill2} application',
     ];
 }
+
+export default ProjectFactory;

@@ -1,4 +1,4 @@
-import { ProjectFactory } from '../ProjectFactory';
+import { ProjectFactory } from './ProjectFactory';
 
 describe('ProjectFactory', () => {
   for (let i = 0; i < 100; i++) {

@@ -21,6 +21,10 @@ table {
   text-align: left;
 } 
 
+ul.bullet-list li {
+  text-align: left;
+}
+
 th, td {
   border: 1px solid black;
   width: 600px;
