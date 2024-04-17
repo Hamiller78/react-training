@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import AssignmentView from "./components/AssignmentView/AssignmentView";
 import Consultant from "./entities/Consultant";
+import ConsultantContext from "./contexts/ConsultantContext";
 import ConsultantFactory from "./services/ConsultantFactory";
 import Project from "./entities/Project";
 import ProjectFactory from "./services/ProjectFactory";
+import ProjectsContext from "./contexts/ProjectsContext";
 import ProjectOverview from "./components/ProjectView/ProjectOverview";
 import { create } from "domain";
 
@@ -24,6 +25,9 @@ function App() {
   const [projects, setProjects] = useState<Project[]>(
     storedProjects ? JSON.parse(storedProjects) : createRandomProjects(5)
   );
+  const [selectedProject, setSelectedProject] = useState<Project | null>(
+    projects[0]
+  );
 
   useEffect(() => {
     localStorage.setItem(
@@ -32,38 +36,16 @@ function App() {
     );
   }, [selectedConsultants]);
 
-  const onSelectEntity = (selectedConsultant: Consultant) => {
-    setSelectedConsultants((selectedConsultants) => [
-      ...selectedConsultants,
-      selectedConsultant,
-    ]);
-  };
-
-  const onUnselectEntity = (unselectedConsultant: Consultant) => {
-    setSelectedConsultants((selectedConsultants) =>
-      selectedConsultants.filter(
-        (consultant) => consultant.id !== unselectedConsultant.id
-      )
-    );
-  };
-
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <AssignmentView
-  //         allEntities={consultants}
-  //         selectedEntities={selectedConsultants}
-  //         onSelectEntity={onSelectEntity}
-  //         onUnselectEntity={onUnselectEntity}
-  //       />
-  //     </header>
-  //   </div>
-  // );
-
   return (
     <div className="App">
       <header className="App-header">
-        <ProjectOverview project={projects[0]} />
+        <ConsultantContext.Provider
+          value={{ consultants: consultants, setConsultants: setConsultants }}
+        >
+          <ProjectsContext.Provider value={{ projects, setProjects }}>
+            {selectedProject && <ProjectOverview project={selectedProject} />}
+          </ProjectsContext.Provider>
+        </ConsultantContext.Provider>
       </header>
     </div>
   );

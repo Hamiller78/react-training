@@ -21,7 +21,15 @@ table {
   text-align: left;
 } 
 
-ul.bullet-list li {
+h2 {
+  text-align: left;
+}
+
+p {
+  text-align: left;
+}
+
+.left-aligned-list {
   text-align: left;
 }
 
