@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Project from "../../entities/Project";
 import ProjectContext from "../../contexts/ProjectsContext";
 import Skill from "../../entities/Skill";
@@ -7,29 +7,46 @@ import ConsultantContext from "../../contexts/ConsultantContext";
 import Consultant from "../../entities/Consultant";
 
 interface ProjectProps {
-  project: Project;
+  projectId: number;
 }
 
-const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
+const ProjectOverview: React.FC<ProjectProps> = ({ projectId }) => {
   const { projects, setProjects } = useContext(ProjectContext);
   const { consultants } = useContext(ConsultantContext);
   const [showAssignmentView, setShowAssignmentView] = useState(false);
+
+  // Find the current project from the projects array
+  const project = projects.find((p) => p.id === projectId);
+
+  useEffect(() => {
+    // This will run after every render where `projects` has changed
+    // You can put any side effect logic here
+    console.log("Projects array has changed:", projects);
+  }, [projects]); // `projects` is the dependency
+
+  if (!project) {
+    return <div>Project not found</div>;
+  }
+
   const skillInTeam = (skill: Skill) =>
     project.assignedConsultants.some((consultant) =>
-      consultant.skills.includes(skill)
+      consultant.skills?.includes(skill)
     );
 
   const handleSelectConsultant = (selectedEntity: Consultant) => {
     if (setProjects) {
       setProjects(
-        projects.map((p) =>
-          p.id === project.id
-            ? {
-                ...p,
-                assignedConsultants: [...p.assignedConsultants, selectedEntity],
-              }
-            : p
-        )
+        projects.map((p) => {
+          if (p.id === project.id) {
+            const updatedProject = {
+              ...p,
+              assignedConsultants: [...p.assignedConsultants, selectedEntity],
+            };
+            return updatedProject;
+          } else {
+            return p;
+          }
+        })
       );
     }
   };

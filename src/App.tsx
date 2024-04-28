@@ -43,7 +43,9 @@ function App() {
           value={{ consultants: consultants, setConsultants: setConsultants }}
         >
           <ProjectsContext.Provider value={{ projects, setProjects }}>
-            {selectedProject && <ProjectOverview project={selectedProject} />}
+            {selectedProject && (
+              <ProjectOverview projectId={selectedProject.id} />
+            )}
           </ProjectsContext.Provider>
         </ConsultantContext.Provider>
       </header>
