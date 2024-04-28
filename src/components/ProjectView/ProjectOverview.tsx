@@ -5,6 +5,7 @@ import Skill from "../../entities/Skill";
 import AssignmentView from "../AssignmentView/AssignmentView";
 import ConsultantContext from "../../contexts/ConsultantContext";
 import Consultant from "../../entities/Consultant";
+import "../../App.css";
 
 interface ProjectProps {
   projectId: number;
@@ -109,13 +110,15 @@ const ProjectOverview: React.FC<ProjectProps> = ({ projectId }) => {
       </button>
       {showAssignmentView && (
         <div className="modal">
-          <button onClick={() => setShowAssignmentView(false)}>Close</button>
-          <AssignmentView
-            allEntities={consultants}
-            selectedEntities={project.assignedConsultants}
-            onSelectEntity={handleSelectConsultant}
-            onUnselectEntity={handleUnselectConsultant}
-          />
+          <div className="modal-content">
+            <button onClick={() => setShowAssignmentView(false)}>Close</button>
+            <AssignmentView
+              allEntities={consultants}
+              selectedEntities={project.assignedConsultants}
+              onSelectEntity={handleSelectConsultant}
+              onUnselectEntity={handleUnselectConsultant}
+            />
+          </div>
         </div>
       )}
     </div>
