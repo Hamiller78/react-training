@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import Project from "../../entities/Project";
-import ProjectContext from "../../contexts/ProjectsContext";
+import ProjectContext from "../../contexts/ProjectContext";
 import Skill from "../../entities/Skill";
 import AssignmentView from "../AssignmentView/AssignmentView";
 import ConsultantContext from "../../contexts/ConsultantContext";
