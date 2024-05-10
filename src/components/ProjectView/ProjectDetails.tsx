@@ -11,8 +11,8 @@ interface ProjectProps {
   projectId: number;
 }
 
-const ProjectOverview: React.FC<ProjectProps> = ({ projectId }) => {
-  const { projects, setProjects } = useContext(ProjectContext);
+const ProjectDetails: React.FC<ProjectProps> = ({ projectId }) => {
+  const { projects, updateProjects } = useContext(ProjectContext);
   const { consultants } = useContext(ConsultantContext);
   const [showAssignmentView, setShowAssignmentView] = useState(false);
 
@@ -35,8 +35,8 @@ const ProjectOverview: React.FC<ProjectProps> = ({ projectId }) => {
     );
 
   const handleSelectConsultant = (selectedEntity: Consultant) => {
-    if (setProjects) {
-      setProjects(
+    if (updateProjects) {
+      updateProjects(
         projects.map((p) => {
           if (p.id === project.id) {
             const updatedProject = {
@@ -53,8 +53,8 @@ const ProjectOverview: React.FC<ProjectProps> = ({ projectId }) => {
   };
 
   const handleUnselectConsultant = (unselectedEntity: Consultant) => {
-    if (setProjects) {
-      setProjects(
+    if (updateProjects) {
+      updateProjects(
         projects.map((p) =>
           p.id === project.id
             ? {
@@ -125,4 +125,4 @@ const ProjectOverview: React.FC<ProjectProps> = ({ projectId }) => {
   );
 };
 
-export default ProjectOverview;
+export default ProjectDetails;
