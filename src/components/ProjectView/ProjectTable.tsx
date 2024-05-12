@@ -32,7 +32,12 @@ const ProjectTable: React.FC = ({}) => {
         </TableHead>
         <TableBody>
           {projects.map((project) => (
-            <TableRow key={project.id}>
+            <TableRow
+              key={project.id}
+              sx={{
+                "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.2)" },
+              }}
+            >
               <TableCell>{project.id}</TableCell>
               <TableCell>{project.name}</TableCell>
               <TableCell>{project.complexity}</TableCell>
