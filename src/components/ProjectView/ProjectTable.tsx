@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ProjectContext } from "../../contexts/ProjectContext";
 import {
   Table,
@@ -7,31 +7,93 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Paper,
 } from "@mui/material";
 
-import { Project } from "../../entities/Project";
+type ProjectSortField = "id" | "name" | "complexity" | "completion";
 
-type ProjectTableProps = {
-  projects: Project[];
-};
-
-const ProjectTable: React.FC = ({}) => {
+const ProjectTable: React.FC = () => {
   const { projects } = useContext(ProjectContext);
+
+  const [sortField, setSortField] = useState<ProjectSortField>("id");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const sortedProjects = [...projects].sort((a, b) => {
+    let compare = 0;
+
+    const aValue = a[sortField];
+    const bValue = b[sortField];
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      compare = (aValue as string).localeCompare(bValue as string, undefined, {
+        sensitivity: "base",
+      });
+    } else if (typeof aValue === "number" && typeof bValue === "number") {
+      compare = (aValue as number) - (bValue as number);
+    }
+
+    if (compare < 0) {
+      return sortDirection === "asc" ? -1 : 1;
+    }
+    if (compare > 0) {
+      return sortDirection === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
+
+  const handleSort = (field: ProjectSortField) => {
+    setSortField(field);
+    setSortDirection(
+      sortField === field && sortDirection === "asc" ? "desc" : "asc"
+    );
+  };
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Complexity</TableCell>
-            <TableCell>Completion</TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === "id"}
+                direction={sortDirection}
+                onClick={() => handleSort("id")}
+              >
+                ID
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === "name"}
+                direction={sortDirection}
+                onClick={() => handleSort("name")}
+              >
+                Name
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === "complexity"}
+                direction={sortDirection}
+                onClick={() => handleSort("complexity")}
+              >
+                Complexity
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === "completion"}
+                direction={sortDirection}
+                onClick={() => handleSort("completion")}
+              >
+                Completion
+              </TableSortLabel>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {projects.map((project) => (
+          {sortedProjects.map((project) => (
             <TableRow
               key={project.id}
               sx={{
