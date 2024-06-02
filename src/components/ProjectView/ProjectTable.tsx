@@ -1,6 +1,10 @@
 import React, { useContext, useState } from "react";
 import { ProjectContext } from "../../contexts/ProjectContext";
+import { Project } from "../../entities/Project";
 import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
   Table,
   TableBody,
   TableCell,
@@ -18,6 +22,9 @@ const ProjectTable: React.FC = () => {
 
   const [sortField, setSortField] = useState<ProjectSortField>("id");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const sortedProjects = [...projects].sort((a, b) => {
     let compare = 0;
@@ -47,6 +54,15 @@ const ProjectTable: React.FC = () => {
     setSortDirection(
       sortField === field && sortDirection === "asc" ? "desc" : "asc"
     );
+  };
+
+  const handleRowDoubleClick = (project: Project) => {
+    setSelectedProject(project);
+    setDetailDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setDetailDialogOpen(false);
   };
 
   return (
@@ -99,6 +115,7 @@ const ProjectTable: React.FC = () => {
               sx={{
                 "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.2)" },
               }}
+              onDoubleClick={() => handleRowDoubleClick(project)}
             >
               <TableCell>{project.id}</TableCell>
               <TableCell>{project.name}</TableCell>
@@ -107,6 +124,21 @@ const ProjectTable: React.FC = () => {
             </TableRow>
           ))}
         </TableBody>
+
+        <Dialog open={detailDialogOpen} onClose={handleClose}>
+          <DialogTitle>Project Details</DialogTitle>
+          <DialogContent>
+            {/* Display the details of the selected project */}
+            {selectedProject && (
+              <div>
+                <p>ID: {selectedProject.id}</p>
+                <p>Name: {selectedProject.name}</p>
+                <p>Complexity: {selectedProject.complexity}</p>
+                <p>Completion: {selectedProject.completion}</p>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </Table>
     </TableContainer>
   );
